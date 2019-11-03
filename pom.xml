@@ -112,7 +112,6 @@
         <finalName>${project.artifactId}-${project.version}</finalName>
         <pluginManagement>
             <plugins>
-
                 <plugin>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-maven-plugin</artifactId>
@@ -122,9 +121,7 @@
                     </configuration>
                     <executions>
                         <execution>
-                            <goals>
-                                <goal>repackage</goal>
-                            </goals>
+                            <goals><goal>repackage</goal></goals>
                         </execution>
                     </executions>
                 </plugin>
@@ -143,14 +140,10 @@
                                     <from>java:8-jdk-alpine</from>
                                     <entryPoint>
                                         <exec>
-                                            <args>java</args>
-                                            <args>-jar</args>
-                                            <args>/maven/${project.build.finalName}.jar</args>
+                                            <args>java</args><args>-jar</args><args>/maven/${project.build.finalName}.jar</args>
                                         </exec>
                                     </entryPoint>
-                                    <assembly>
-                                        <descriptorRef>artifact</descriptorRef>
-                                    </assembly>
+                                    <assembly><descriptorRef>artifact</descriptorRef></assembly>
                                 </build>
                             </image>
                         </images>
