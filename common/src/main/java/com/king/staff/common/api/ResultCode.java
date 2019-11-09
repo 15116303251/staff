@@ -26,7 +26,7 @@ public enum ResultCode {
 
     METHOD_NOT_SUPPORTED(HttpServletResponse.SC_METHOD_NOT_ALLOWED,"Method Not Supported"),
 
-    METHOD_TYPE_NOT_SUPPORTED(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE,"Media Type Not Supported"),
+    MEDIA_TYPE_NOT_SUPPORTED(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE,"Media Type Not Supported"),
 
     REQ_REJECT(HttpServletResponse.SC_FORBIDDEN,"Request Rejected"),
 
