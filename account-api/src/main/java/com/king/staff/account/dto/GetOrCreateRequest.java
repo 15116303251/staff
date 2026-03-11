@@ -1,11 +1,19 @@
 package com.king.staff.account.dto;
 
 import com.king.staff.common.validation.PhoneNumber;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.util.StringUtils;
 
 import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.Email;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class GetOrCreateRequest {
 
     private String name;
