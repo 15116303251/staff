@@ -18,10 +18,10 @@ public interface AccountClient {
     GenericAccountResponse createAccount(@RequestHeader(AuthConstant.AUTHORIZATION_HEADER)String authz, @RequestBody @Valid CreateAccountRequest request);
 
     @PostMapping(path = "/track_event")
-    BaseResponse trackEvent(@RequestBody @Valid TrackEventRequest request);
+    BaseResponse trackEvent(@RequestHeader(AuthConstant.AUTHORIZATION_HEADER) String authz, @RequestBody @Valid TrackEventRequest request);
 
     @PostMapping(path = "/sync_user")
-    BaseResponse syncUser(@RequestBody @Valid SyncUserRequest request);
+    BaseResponse syncUser(@RequestHeader(AuthConstant.AUTHORIZATION_HEADER) String authz, @RequestBody @Valid SyncUserRequest request);
 
     @GetMapping(path = "/list")
     ListAccountResponse listAccounts(@RequestHeader(AuthConstant.AUTHORIZATION_HEADER)String authz, @RequestParam int offset,@RequestParam @Min(0) int limit );
