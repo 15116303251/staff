@@ -2,6 +2,8 @@ package com.king.account.config;
 
 import com.king.staff.common.async.ContextCopingDecorator;
 import com.king.staff.common.config.StaffjoyRestConfig;
+import com.king.staff.common.env.EnvConfig;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -17,6 +19,9 @@ import java.util.concurrent.Executor;
 @Import(value={StaffjoyRestConfig.class})
 @SuppressWarnings(value = "Duplicates")
 public class AppConfig {
+
+    @Value("${spring.profiles.active:dev}")
+    private String activeProfile;
 
     public static final String ASYNC_EXECUTOR_NAME="asyncExecutor";
 
@@ -37,6 +42,11 @@ public class AppConfig {
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public EnvConfig envConfig(){
+        return EnvConfig.getEnvConfig(activeProfile);
     }
 
 }
