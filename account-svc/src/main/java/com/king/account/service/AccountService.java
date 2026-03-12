@@ -133,7 +133,8 @@ public class AccountService {
         if (limit <= 0) {
             limit = 10;
         }
-        PageRequest pageRequest = PageRequest.of(offset, limit);
+        int page = offset / limit;
+        PageRequest pageRequest = PageRequest.of(page, limit);
         Page<Account> accountPage = accountRepo.findAll(pageRequest);
         List<AccountDto> accountDtoList = accountPage.getContent().stream()
                 .map(this::convertToDto)

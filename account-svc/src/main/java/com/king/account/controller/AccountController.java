@@ -34,12 +34,20 @@ public class AccountController {
     }
 
     @PostMapping(path = "/track_event")
+    @Authorize(value = {
+            AuthConstant.AUTHORIZATION_ACCOUNT_SERVICE,
+            AuthConstant.AUTHORIZATION_AUTHENTICATED_USER
+    })
     public BaseResponse trackEvent(@RequestBody @Valid TrackEventRequest request) {
         accountService.trackEvent(request);
         return BaseResponse.builder().message("event tracked").build();
     }
 
     @PostMapping(path = "/sync_user")
+    @Authorize(value = {
+            AuthConstant.AUTHORIZATION_ACCOUNT_SERVICE,
+            AuthConstant.AUTHORIZATION_AUTHENTICATED_USER
+    })
     public BaseResponse syncUser(@RequestBody @Valid SyncUserRequest request) {
         accountService.syncUser(request);
         return BaseResponse.builder().message("user synced").build();
