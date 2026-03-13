@@ -29,13 +29,13 @@ public interface AccountClient {
     @PostMapping(path = "/get_or_create")
     GenericAccountResponse getOrCreateAccount(@RequestHeader(AuthConstant.AUTHORIZATION_HEADER)String authz,@RequestBody @Valid GetOrCreateRequest request);
 
-    @PostMapping(path = "/get")
+    @GetMapping(path = "/get")
     GenericAccountResponse getAccount(@RequestHeader(AuthConstant.AUTHORIZATION_HEADER)String authz,@RequestParam @NotBlank String userId);
 
     @PostMapping(path="/update")
     GenericAccountResponse updateAccount(@RequestHeader(AuthConstant.AUTHORIZATION_HEADER)String authz,@RequestBody @Valid AccountDto accountDto);
 
-    @PostMapping(path = "/get_account_by_phonenumber")
+    @GetMapping(path = "/get_account_by_phonenumber")
     GenericAccountResponse getAccountByPhoneNumber(@RequestHeader(AuthConstant.AUTHORIZATION_HEADER)String authz,@RequestParam @Valid String phoneNumber);
 
     @PostMapping(path = "/update_password")

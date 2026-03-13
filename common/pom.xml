@@ -31,12 +31,12 @@
             <artifactId>sentry</artifactId>
         </dependency>
         <dependency>
-            <groupId>structlog4j</groupId>
-            <artifactId>structlog4j-api</artifactId>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>structlog4j</groupId>
-            <artifactId>structlog4j-json</artifactId>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
         </dependency>
         <dependency>
             <groupId>org.modelmapper</groupId>
@@ -82,7 +82,7 @@
     <repositories>
         <repository>
             <id>aliyun-repos</id>
-            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+            <url>https://maven.aliyun.com/repository/public/</url>
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
@@ -90,7 +90,7 @@
         <!--https://github.com/jacek99/structlog4j-->
         <repository>
             <id>jcenter</id>
-            <url>http://jcenter.bintray.com</url>
+            <url>https://jcenter.bintray.com/</url>
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
@@ -100,7 +100,7 @@
     <pluginRepositories>
         <pluginRepository>
             <id>aliyun-plugin</id>
-            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+            <url>https://maven.aliyun.com/repository/public/</url>
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>

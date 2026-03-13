@@ -17,7 +17,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.version>1.8</java.version>
+        <java.version>11</java.version>
         <spring.boot.version>2.1.2.RELEASE</spring.boot.version>
         <spring.cloud.version>Greenwich.RELEASE</spring.cloud.version>
     </properties>
@@ -53,18 +53,16 @@
                 <version>2.9.2</version>
             </dependency>
 
-            <!--structured logging-->
+            <!--structured logging - using SLF4J instead of structlog4j-->
             <dependency>
-                <groupId>structlog4j</groupId>
-                <artifactId>structlog4j-api</artifactId>
-                <version>1.0.0</version>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>1.7.30</version>
             </dependency>
-
-            <!--optional json formatter-->
             <dependency>
-                <groupId>structlog4j</groupId>
-                <artifactId>structlog4j-json</artifactId>
-                <version>1.0.0</version>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>1.2.3</version>
             </dependency>
 
             <!-- https://mvnrepository.com/artifact/io.sentry/sentry -->
@@ -178,6 +176,12 @@
                     <compilerArgs>
                         <arg>-parameters</arg>
                     </compilerArgs>
+                    <fork>true</fork>
+                    <executable>java</executable>
+                    <compilerArgs>
+                        <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED</arg>
+                        <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED</arg>
+                    </compilerArgs>
                 </configuration>
             </plugin>
         </plugins>
@@ -187,7 +191,7 @@
     <repositories>
         <repository>
             <id>aliyun-repos</id>
-            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+            <url>https://maven.aliyun.com/repository/public/</url>
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
@@ -195,7 +199,7 @@
         <!--https://github.com/jacek99/structlog4j-->
         <repository>
             <id>jcenter</id>
-            <url>http://jcenter.bintray.com</url>
+            <url>https://jcenter.bintray.com/</url>
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
@@ -205,7 +209,7 @@
     <pluginRepositories>
         <pluginRepository>
             <id>aliyun-plugin</id>
-            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+            <url>https://maven.aliyun.com/repository/public/</url>
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>

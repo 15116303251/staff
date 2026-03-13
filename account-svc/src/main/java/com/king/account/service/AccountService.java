@@ -1,7 +1,7 @@
 package com.king.account.service;
 
-import com.github.structlog4j.ILogger;
-import com.github.structlog4j.SLoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.king.account.model.Account;
 import com.king.account.repo.AccountRepo;
 import com.king.staff.account.AccountConstant;
@@ -21,24 +21,49 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Account Service - Handles business logic for user account management.
+ * Provides functionality for creating, retrieving, updating, and deleting user accounts.
+ * Includes password management, account verification, and listing operations.
+ * 
+ * @author King Staff
+ * @version 1.0
+ * @since 2024-01-01
+ */
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class AccountService {
 
-    static final ILogger logger = SLoggerFactory.getLogger(AccountService.class);
+    static final Logger logger = LoggerFactory.getLogger(AccountService.class);
 
     private final AccountRepo accountRepo;
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
     private final EnvConfig envConfig;
 
+    /**
+     * Creates a new user account.
+     * Validates that the email or phone number is provided and not already in use.
+     * Generates a Gravatar URL for the profile photo if email is provided.
+     * 
+     * @param request The account creation request containing user details
+     * @return AccountDto containing the created account information
+     * @throws ServiceException if email or phone number already exists, or if neither is provided
+     */
     public AccountDto createAccount(CreateAccountRequest request) {
+        // Validate that at least one of email or phone number is provided
+        if (!StringUtils.hasText(request.getEmail()) && !StringUtils.hasText(request.getPhoneNumber())) {
+            throw new ServiceException("Either email or phone number must be provided");
+        }
+
         // check if account already exists by email
         if (StringUtils.hasText(request.getEmail())) {
             Account existingAccount = accountRepo.findAccountByEmail(request.getEmail());
@@ -55,13 +80,22 @@ public class AccountService {
             }
         }
 
+        // Generate photo URL - use email if available, otherwise use a default
+        String photoUrl;
+        if (StringUtils.hasText(request.getEmail())) {
+            photoUrl = Helper.generateGravatarUrl(request.getEmail());
+        } else {
+            // Use a default avatar for phone-only accounts
+            photoUrl = "https://www.gravatar.com/avatar/00000000000000000000000000000000.jpg?s=400&d=identicon";
+        }
+
         Account account = Account.builder()
                 .email(request.getEmail())
                 .name(request.getName())
                 .phoneNumber(request.getPhoneNumber())
                 .memberSince(Instant.now())
                 .confirmedAndActive(false)
-                .photoUrl(Helper.genernateGravatarUrl(request.getEmail()))
+                .photoUrl(photoUrl)
                 .build();
 
         Account savedAccount;
@@ -80,12 +114,19 @@ public class AccountService {
                 .targetId(savedAccount.getId())
                 .updatedContents(savedAccount.toString())
                 .build();
-        logger.info("created account", auditLog);
+        logger.info("created account: {}", auditLog);
 
         AccountDto accountDto = convertToDto(savedAccount);
         return accountDto;
     }
 
+    /**
+     * Retrieves an account by user ID.
+     * 
+     * @param userId The unique identifier of the user account
+     * @return AccountDto containing the account information
+     * @throws ServiceException if the account is not found
+     */
     public AccountDto getAccount(String userId) {
         Account account = accountRepo.findById(userId)
                 .orElseThrow(() -> new ServiceException(ResultCode.NOT_FOUND));
@@ -173,6 +214,12 @@ public class AccountService {
         return createAccount(createRequest);
     }
 
+    /**
+     * Updates the password for a user account.
+     * 
+     * @param request The password update request containing user ID and new password
+     * @throws ServiceException if the account is not found
+     */
     public void updatePassword(UpdatePasswordRequest request) {
         Account account = accountRepo.findById(request.getUserId())
                 .orElseThrow(() -> new ServiceException(ResultCode.NOT_FOUND));
@@ -195,9 +242,15 @@ public class AccountService {
                 .targetId(request.getUserId())
                 .updatedContents("password updated")
                 .build();
-        logger.info("updated password", auditLog);
+        logger.info("updated password: {}", auditLog);
     }
 
+    /**
+     * Verifies a user's password.
+     * 
+     * @param request The password verification request containing email and password
+     * @throws ServiceException if the account is not found or password is incorrect
+     */
     public void verifyPassword(VerifyPasswordRequest request) {
         Account account = accountRepo.findAccountByEmail(request.getEmail());
         if (account == null) {

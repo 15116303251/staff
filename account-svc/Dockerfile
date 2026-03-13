@@ -1,9 +1,44 @@
-FROM java:8-jdk-alpine
+# Multi-stage build for Account Service
+FROM maven:3.8.4-openjdk-8-slim AS build
 
-COPY ./target/account-svc-1.0.0.jar /usr/app/
+WORKDIR /app
 
-WORKDIR /usr/app
+# Copy pom.xml and download dependencies
+COPY pom.xml .
+COPY account-api/pom.xml account-api/
+COPY common/pom.xml common/
+COPY account-svc/pom.xml account-svc/
 
-RUN sh -c 'touch account-svc-1.0.0.jar'
+# Download dependencies
+RUN mvn dependency:go-offline -B
 
-ENTRYPOINT ["java","-jar","account-svc-1.0.0.jar"]
+# Copy source code
+COPY . .
+
+# Build the application
+RUN mvn clean package -DskipTests
+
+# Runtime stage
+FROM openjdk:8-jre-slim
+
+# Install curl for health checks
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Copy the built jar from the build stage
+COPY --from=build /app/account-svc/target/account-svc-*.jar app.jar
+
+# Create a non-root user to run the application
+RUN groupadd -r spring && useradd -r -g spring spring
+USER spring:spring
+
+# Expose the port
+EXPOSE 8080
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=60s --retries=3 \
+  CMD curl -f http://localhost:8080/actuator/health || exit 1
+
+# Run the application
+ENTRYPOINT ["java", "-jar", "app.jar"]

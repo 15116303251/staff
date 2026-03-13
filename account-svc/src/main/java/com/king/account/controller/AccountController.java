@@ -13,6 +13,14 @@ import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 
+/**
+ * Account Controller - REST API endpoints for user account management.
+ * Provides HTTP endpoints for creating, retrieving, updating, and managing user accounts.
+ * 
+ * @author King Staff
+ * @version 1.0
+ * @since 2024-01-01
+ */
 @RestController
 @RequestMapping("/v1/account")
 public class AccountController {
@@ -20,6 +28,12 @@ public class AccountController {
     @Autowired
     private AccountService accountService;
 
+    /**
+     * Creates a new user account.
+     * 
+     * @param request The account creation request containing user details
+     * @return GenericAccountResponse containing the created account information
+     */
     @PostMapping(path = "/create")
     @Authorize(value = {
             AuthConstant.AUTHORIZATION_SUPPORT_USER,
@@ -77,7 +91,13 @@ public class AccountController {
         return response;
     }
 
-    @PostMapping(path = "/get")
+    /**
+     * Retrieves an account by user ID.
+     * 
+     * @param userId The unique identifier of the user account
+     * @return GenericAccountResponse containing the account information
+     */
+    @GetMapping(path = "/get")
     @Authorize(value = {
             AuthConstant.AUTHORIZATION_SUPPORT_USER,
             AuthConstant.AUTHORIZATION_WWW_SERVICE,
@@ -108,7 +128,7 @@ public class AccountController {
         return response;
     }
 
-    @PostMapping(path = "/get_account_by_phonenumber")
+    @GetMapping(path = "/get_account_by_phonenumber")
     @Authorize(value = {
             AuthConstant.AUTHORIZATION_SUPPORT_USER,
             AuthConstant.AUTHORIZATION_WWW_SERVICE,
