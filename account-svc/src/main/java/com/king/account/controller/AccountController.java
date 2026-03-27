@@ -64,6 +64,33 @@ public class AccountController {
         return response;
     }
 
+    @PostMapping(path = "/search")
+    @Authorize(value = {
+            AuthConstant.AUTHORIZATION_SUPPORT_USER
+    })
+    public ListAccountResponse searchAccounts(@RequestBody @Valid SearchAccountRequest request) {
+        AccountList accountList = accountService.searchAccounts(request);
+        ListAccountResponse response = new ListAccountResponse();
+        response.setAccountList(accountList);
+        return response;
+    }
+
+    @GetMapping(path = "/stats")
+    @Authorize(value = {
+            AuthConstant.AUTHORIZATION_SUPPORT_USER
+    })
+    public AccountStatsResponse getAccountStats() {
+        return accountService.getAccountStats();
+    }
+
+    @PostMapping(path = "/batch")
+    @Authorize(value = {
+            AuthConstant.AUTHORIZATION_SUPPORT_USER
+    })
+    public BaseResponse batchOperation(@RequestBody @Valid BatchAccountRequest request) {
+        return accountService.batchOperation(request);
+    }
+
     @PostMapping(path = "/get_or_create")
     @Authorize(value = {
             AuthConstant.AUTHORIZATION_SUPPORT_USER,
