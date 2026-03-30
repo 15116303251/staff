@@ -1,7 +1,5 @@
 package com.king.staff.common.config;
 
-import com.github.structlog4j.StructLog4J;
-import com.github.structlog4j.json.JsonFormatter;
 import com.king.staff.common.auth.AuthorizeInterceptor;
 import com.king.staff.common.auth.FeignRequestHeaderInterceptor;
 import feign.RequestInterceptor;
@@ -56,14 +54,8 @@ public class StaffjoyConfig implements WebMvcConfigurer {
 
     @PostConstruct
     public void init(){
-        //init structured logging
-        StructLog4J.setFormatter(JsonFormatter.getInstance());
-
-        //global log fields setting
-        StructLog4J.setMandatoryContextSupplier(()->new Object[]{
-                "env",activeProfile,
-                "service",appName
-        });
+        // Logging initialization - using SLF4J instead of structlog4j
+        // SLF4J is automatically configured by Spring Boot
     }
 
     @PreDestroy

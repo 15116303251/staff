@@ -27,6 +27,5 @@ public class AccountDto {
     private boolean support;
     @PhoneNumber
     private String phoneNumber;
-    @NotEmpty
     private String photoUrl;
 }

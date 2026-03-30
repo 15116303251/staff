@@ -1,11 +1,11 @@
 package com.king.staff.common.error;
 
-import com.github.structlog4j.ILogger;
-import com.github.structlog4j.SLoggerFactory;
 import com.king.staff.common.api.BaseResponse;
 import com.king.staff.common.api.ResultCode;
 import com.king.staff.common.auth.PermissionDeniedException;
 import org.hibernate.validator.internal.engine.path.PathImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
@@ -25,7 +25,7 @@ import java.util.Set;
 @RestControllerAdvice
 public class GlobalExceptionTranslator {
 
-    static final ILogger logger = SLoggerFactory.getLogger(GlobalExceptionTranslator.class);
+    static final Logger logger = LoggerFactory.getLogger(GlobalExceptionTranslator.class);
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public BaseResponse handleError(MissingServletRequestParameterException e){
